@@ -1,0 +1,24 @@
+Young Volunteers Reading v3 · Recommended 14 validation
+
+- Source: 修改后的volunteer matching.docx
+- Original Volunteers folder: hash checked, unchanged.
+- Formal Lead-in and both vocabulary activities aligned with the two approved preview pages.
+- Four profiles: 163 body words each; 165 including two-word headings.
+- Six groups a-f, teacher demo g, exit h-i.
+- Answers: D B D A B C / D / A C.
+- All revised questions, keys, exact quotes and highlighting phrases checked.
+- Demo compares A/B/D, sequential reveal; no forced C row.
+- Partial-match traps b and d checked; partial evidence rejected.
+- Question f allows four evidence sentences; all three concepts required.
+- Three Node test cases passed; coverage includes one-tablet-per-group locking, occupied-group rejection, and same-name recovery.
+- All modified JavaScript files passed syntax checks.
+- Group 6 PDF: 11 pages; new labels, four exact quotes, margin bounds checked.
+- Teacher-only warm-up verified locally: Lead-in, deliberately crossed vocabulary matches, two-at-a-time Hot Potato reveals, animated red Monster ball and START READING handoff.
+- Lead-in photo loading and the four-stage teacher warm-up navigation were visually verified in the browser.
+- Key Idea reveal is one question at a time; Text Bridge uses a three-column student/reference/Key Idea comparison; Recapture remains a four-step horizontal flow beginning with Key Ideas.
+- Student waiting gate remains active until START READING.
+- START CLASS remains enabled at 0–6 connected groups; a zero-group room was verified to enter Lead-in successfully.
+- Exit Ticket accepts any complete two-question submission; correctness is calculated only after submission.
+- Peer review order is Question + Key Idea → Text Bridge → Who, with explicit Approve / Revise criteria.
+- Student Peer Check now matches the approved simplified comparison card; a real Group 1 → Group 2 check verified choice activation and successful submission.
+- The Monster ball uses its original photographed eyes and retains the whole-ball bounce animation without extra pupil overlays.
