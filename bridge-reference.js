@@ -200,9 +200,9 @@ module.exports=[
       "discovering"
     ],
     "keyParts": [
-      "didn't want the role",
-      "expected it to be dull",
-      "learned why it was important"
+      "didn't want it",
+      "thought it didn't help",
+      "found it helpful"
     ],
     "matches": [
       [
@@ -217,9 +217,9 @@ module.exports=[
       ]
     ],
     "proof": [
-      "I didn’t want to work in the shop ↔ didn't want the role",
-      "expected sorting clothes and serving customers to be dull ↔ expected it to be dull",
-      "shop money paid for animal care / changed my opinion ↔ learned why it was important"
+      "I didn’t want to work in the shop ↔ didn't want it",
+      "expected the shop work to be dull ↔ thought it didn't help",
+      "shop money paid for animal care / changed my opinion ↔ found it helpful"
     ],
     "distractors": [
       {
