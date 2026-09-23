@@ -148,3 +148,21 @@ body:not(.teacher) .heading h1{font-size:clamp(30px,3.1vw,44px);font-weight:900;
 @media(max-width:700px){#key-layout.key-task-layout .focus-question{padding:22px 20px}#key-layout.key-task-layout .key-question-line{gap:6px;margin-top:19px}#key-layout.key-task-layout #question-prefix,#key-layout.key-task-layout .focus-question #question-text{font-size:22px}#key-layout.key-task-layout .focus-question #key-caption{margin-top:25px;padding-top:17px}#key-layout.key-task-layout .focus-question .keyword-tools{margin-top:24px}}
 
 .peer-task-set{display:grid;gap:12px;margin:0 0 18px;padding:14px;border:1px solid #d6d4c8;border-radius:16px;background:#fffdf8}.peer-task-set:last-of-type{margin-bottom:8px}
+
+/* Student Text Bridge tasks: instructions first, then the question, then the Key Idea. */
+#key-layout.bridge-task-layout .focus-question{padding:14px 22px 20px;background:#fffdf8;border:1px solid #ded8c9;border-left-width:1px;border-radius:16px}
+#key-layout.bridge-task-layout .focus-question>small{display:block;margin:0;font-size:11px;font-weight:900;letter-spacing:1.6px;color:#173f35}
+#key-layout.bridge-task-layout .task-guide{margin:11px 0 16px;padding:9px 13px;border-radius:9px;background:#f3f0e8}
+#key-layout.bridge-task-layout .task-guide strong{display:block;color:#385b70;font-size:13px;line-height:1.4;letter-spacing:.2px}
+#key-layout.bridge-task-layout .task-guide small{display:block;margin-top:3px;color:#6e7b75;font-size:12px;font-weight:500;line-height:1.4;letter-spacing:0}
+#key-layout.bridge-task-layout .key-question-line{display:flex;align-items:flex-start;gap:10px;margin:0;padding:15px 17px;border:1px solid #b8d2e4;border-left:5px solid #5b8fb4;border-radius:11px;background:#eaf3fb}
+#key-layout.bridge-task-layout #question-prefix{display:inline-block;flex:0 0 auto;padding:1px 7px;border-radius:7px;background:#fff3c8;color:#8d6110;font-size:22px;font-weight:900;line-height:1.42;white-space:nowrap}
+#key-layout.bridge-task-layout .focus-question #question-text{flex:1;min-width:0;margin:0;color:#0b3157;font-size:22px;font-weight:750;line-height:1.42}
+#key-layout.bridge-task-layout .focus-question #key-caption{margin:12px 0 0;font-size:18px;line-height:1.45}
+#key-layout.bridge-task-layout #key-caption .task-key-idea{display:block;margin:0;padding:12px 15px;border-left:5px solid #367c6d;border-radius:9px;background:#e7f3f0;color:#205e52;font-size:18px;font-weight:700;letter-spacing:0}
+#key-layout.bridge-task-layout .task-key-idea b{margin-right:7px;font-size:12px;letter-spacing:.8px}
+#key-layout.bridge-task-layout .task-key-idea mark{padding:3px 6px;border-radius:6px;background:#eee2f7;box-shadow:inset 0 -2px #8b68aa;color:#493260;font-weight:850}
+#key-layout.key-task-layout .task-guide{margin:32px 0 0;padding-top:21px;border-top:1px dashed #d4c8a9}
+#key-layout.key-task-layout .task-guide strong{display:block;color:#2c6996;font-size:18px;font-weight:900;line-height:1.5}
+#key-layout.key-task-layout .task-guide small{display:block;margin-top:9px;color:#788178;font-size:14px;line-height:1.55}
+@media(max-width:700px){#key-layout.bridge-task-layout .focus-question{padding:13px 15px 17px}#key-layout.bridge-task-layout .task-guide strong{font-size:12px}#key-layout.bridge-task-layout .key-question-line{padding:13px 14px}#key-layout.bridge-task-layout #question-prefix,#key-layout.bridge-task-layout .focus-question #question-text{font-size:20px}#key-layout.bridge-task-layout #key-caption .task-key-idea{font-size:17px}}
