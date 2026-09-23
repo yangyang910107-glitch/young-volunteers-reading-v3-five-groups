@@ -31,9 +31,9 @@ const KEY_ANSWERS=[0,1,2,3,4,5,6,7],WHO_ANSWERS=[
   ],
   [
     "C5",
+    "C6",
     "C7",
-    "C8",
-    "C10"
+    "C8"
   ],
   [
     "A5"
@@ -102,14 +102,15 @@ const KEY_ANSWERS=[0,1,2,3,4,5,6,7],WHO_ANSWERS=[
   {
     "required": [
       "C5",
+      "C6",
       "C7",
-      "C10"
+      "C8"
     ],
     "allowed": [
       "C5",
+      "C6",
       "C7",
-      "C8",
-      "C10"
+      "C8"
     ]
   },
   {
@@ -138,7 +139,7 @@ const KEY_ANSWERS=[0,1,2,3,4,5,6,7],WHO_ANSWERS=[
   "found the work difficult / too embarrassed to admit I needed help ↔ past problem · Remembering that / I behaved in the same way → recognise what is happening ↔ knows when others need help",
   "schoolwork has to be my priority ↔ other work comes first · most Saturdays → only twice a month ↔ less time to help",
   "make and edit short videos for fun ↔ hobby skill · use those skills for the organisation / posts encouraging teenagers to join ↔ helps the organisation",
-  "I didn’t want to work in the shop ↔ didn't want it · only direct animal work was really helping ↔ thought it didn't help · shop money paid for food, medicine and emergency treatment ↔ found it helpful",
+  "I didn’t want to work in the shop ↔ didn't want the role · expected sorting clothes and serving customers to be dull ↔ expected it to be dull · shop money paid for animal care / changed my opinion ↔ learned why it was important",
   "making those choices ↔ makes choices · without asking someone else first ↔ no need to ask",
   "feeding dogs / taking them for walks ↔ wanted work · only fifteen / under sixteen ↔ too young"
 ];const {SENTENCES,EVIDENCE_UNITS}=require('./public/article'),REF=require('./bridge-reference');

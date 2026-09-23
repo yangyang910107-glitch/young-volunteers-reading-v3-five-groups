@@ -11,3 +11,9 @@ test('whole-sentence evidence preserves reference grading and original key numbe
  assert.equal(MODEL_OPTIONS.indexOf('gets ready first + then leads a group')+1,3);
  assert.deepEqual(KEYS.slice(0,6).map(k=>MODEL_OPTIONS.indexOf(k)+1),[9,4,8,6,1,5]);
 });
+test('Sofia uses the complete four-sentence change sequence',()=>{
+ assert.equal(KEYS[5],"didn't want the role + expected it to be dull → learned why it was important");
+ assert.deepEqual(EVIDENCE[5],['C5','C6','C7','C8']);
+ assert.equal(bridgeCorrect(5,['C5','C6','C7','C8']),true);
+ assert.equal(bridgeCorrect(5,['C5','C7','C8','C10']),false);
+});

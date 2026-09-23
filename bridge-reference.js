@@ -200,27 +200,26 @@ module.exports=[
       "discovering"
     ],
     "keyParts": [
-      "didn't want it",
-      "thought it didn't help",
-      "found it helpful"
+      "didn't want the role",
+      "expected it to be dull",
+      "learned why it was important"
     ],
     "matches": [
       [
         "I didn’t want to work in the shop"
       ],
       [
-        "only people working directly with animals were really helping them"
+        "I expected sorting donated clothes and serving customers to be dull"
       ],
       [
         "money from the shop paid for food, medicine and emergency treatment for the animals",
-        "That completely changed my opinion of the job",
-        "I no longer believe that"
+        "That completely changed my opinion of the job"
       ]
     ],
     "proof": [
-      "I didn’t want to work in the shop ↔ didn't want it",
-      "only direct animal work was really helping ↔ thought it didn't help",
-      "shop money paid for food, medicine and emergency treatment ↔ found it helpful"
+      "I didn’t want to work in the shop ↔ didn't want the role",
+      "expected sorting clothes and serving customers to be dull ↔ expected it to be dull",
+      "shop money paid for animal care / changed my opinion ↔ learned why it was important"
     ],
     "distractors": [
       {
@@ -235,16 +234,15 @@ module.exports=[
         "note": "An initial lack of interest, but no reluctantly accepted role whose value was later recognised."
       },
       {
-        "id": "C6",
+        "id": "C10",
         "hits": [
-          [
-            "expected",
-            "dull"
-          ],
           [],
-          []
+          [],
+          [
+            "I no longer believe that"
+          ]
         ],
-        "note": "Dull means boring. This alone does not show that she underestimated the job’s VALUE; compare C10 with C7."
+        "note": "This confirms Sofia’s later opinion, but the four-sentence sequence from C5 to C8 already shows the complete change."
       }
     ]
   },
