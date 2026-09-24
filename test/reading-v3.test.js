@@ -114,3 +114,25 @@ test('a rescanned student restores one record while wrong names and groups stay 
  await assert.rejects(send(await connect(),'student:join',{code:'RECOVER',group:2,name:'Same Tablet',clientId:'wrong-group-session'}),/belongs to Group 1/i);
  assert.equal((await send(teacher,'teacher:join',{code:'RECOVER',token:room.token,expected:5})).state.joined,1);
 });
+
+test('teacher can start a clean class on the same fixed code without changing the QR',async t=>{
+ const app=createApp(),clients=[];
+ await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
+ t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(resolve=>app.io.close(resolve));});
+ const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(resolve=>c.once('connect',resolve));return c;};
+ const send=(c,event,payload={})=>new Promise((resolve,reject)=>c.timeout(3000).emit(event,payload,(err,result)=>err?reject(err):result.ok?resolve(result):reject(Error(result.error))));
+ const teacher=await connect(),opened=await send(teacher,'teacher:join',{code:'VOL5G',expected:5}),auth={code:'VOL5G',token:opened.token};
+ const student=await connect();
+ await send(student,'student:join',{code:'VOL5G',group:4,name:'Practice Group',clientId:'practice-before-class'});
+ const studentClosed=new Promise(resolve=>student.once('disconnect',resolve));
+ const fresh=await send(teacher,'teacher:newClass',auth);
+ await studentClosed;
+ assert.equal(fresh.state.code,'VOL5G');
+ assert.equal(fresh.state.joined,0);
+ assert.equal(fresh.state.classStarted,false);
+ assert.equal(fresh.state.stage,'gist');
+ assert.notEqual(fresh.state.roomId,opened.state.roomId);
+ const newStudent=await send(await connect(),'student:join',{code:'VOL5G',group:4,name:'Official Group',clientId:'official-class-group'});
+ assert.equal(newStudent.resumed,false);
+ assert.equal(newStudent.state.joined,1);
+});

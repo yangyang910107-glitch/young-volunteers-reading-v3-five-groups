@@ -24,3 +24,4 @@ function advanceGuide(){guideIndex++;if(guideIndex>=(guideMode==='questions'?6:P
 $('export-class').onclick=()=>downloadRecord($('export-class'),'teacher:record',session,'Young-Volunteers-'+session.code+'-class.pdf');
 
 $('copy-guest').onclick=async()=>{try{await navigator.clipboard.writeText($('observer-link').href);$('copy-guest').textContent='GUEST LINK COPIED ✓';}catch{error('Open the student demo and copy its browser address.');}};
+$('new-class').onclick=async()=>{if(!confirm('Start a completely new class? This clears all students, answers and scores from VOL5G.'))return;try{const r=await request('teacher:newClass',session);state=r.state;render(state);const entry=new URL('/join.html',location.origin);entry.searchParams.set('room',state.code);location.assign(entry.href);}catch(e){error(e.message);}};
