@@ -57,3 +57,25 @@ test('five-group lesson keeps all six bridge questions and uses a five-group pee
  assert.equal(record.groups[4].initial.length,2);
  assert.deepEqual(record.groups[4].initialCorrect,[true,true]);
 });
+
+test('fixed room restores a returning group and can be reclaimed after the teacher closes it',async t=>{
+ const app=createApp(),clients=[];
+ await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
+ t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(resolve=>app.io.close(resolve));});
+ const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(resolve=>c.once('connect',resolve));return c;};
+ const send=(c,event,payload={})=>new Promise((resolve,reject)=>c.timeout(3000).emit(event,payload,(err,result)=>err?reject(err):result.ok?resolve(result):reject(Error(result.error))));
+ const teacher=await connect(),opened=await send(teacher,'teacher:join',{code:'VOL5G',expected:5});
+ const firstStudent=await connect();
+ await send(firstStudent,'student:join',{code:'VOL5G',group:2,name:'Recovery Team',clientId:'original-recovery-client'});
+ firstStudent.disconnect();
+ await new Promise(resolve=>setTimeout(resolve,30));
+ const returningStudent=await connect(),restored=await send(returningStudent,'student:join',{code:'VOL5G',group:2,name:'Recovery Team',clientId:'new-recovery-client'});
+ assert.equal(restored.resumed,true);
+ assert.equal(restored.group,2);
+ teacher.disconnect();
+ await new Promise(resolve=>setTimeout(resolve,30));
+ const replacementTeacher=await connect(),reclaimed=await send(replacementTeacher,'teacher:join',{code:'VOL5G',expected:5});
+ assert.notEqual(reclaimed.token,opened.token);
+ assert.equal(reclaimed.state.joined,1);
+ await assert.rejects(send(await connect(),'teacher:join',{code:'VOL5G',expected:5}),/in use/i);
+});
