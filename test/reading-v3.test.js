@@ -130,9 +130,28 @@ test('teacher can start a clean class on the same fixed code without changing th
  assert.equal(fresh.state.code,'VOL5G');
  assert.equal(fresh.state.joined,0);
  assert.equal(fresh.state.classStarted,false);
+ assert.deepEqual(fresh.state.warmup,{started:true,stage:0});
  assert.equal(fresh.state.stage,'gist');
  assert.notEqual(fresh.state.roomId,opened.state.roomId);
  const newStudent=await send(await connect(),'student:join',{code:'VOL5G',group:4,name:'Official Group',clientId:'official-class-group'});
  assert.equal(newStudent.resumed,false);
  assert.equal(newStudent.state.joined,1);
+});
+
+test('restart returns to Lead-in while keeping the current groups',async t=>{
+ const app=createApp(),clients=[];
+ await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
+ t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(resolve=>app.io.close(resolve));});
+ const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(resolve=>c.once('connect',resolve));return c;};
+ const send=(c,event,payload={})=>new Promise((resolve,reject)=>c.timeout(3000).emit(event,payload,(err,result)=>err?reject(err):result.ok?resolve(result):reject(Error(result.error))));
+ const teacher=await connect(),opened=await send(teacher,'teacher:join',{code:'LEADRESET',expected:5}),auth={code:'LEADRESET',token:opened.token};
+ await send(await connect(),'student:join',{code:'LEADRESET',group:3,name:'Kept Group',clientId:'lead-reset-group'});
+ await send(teacher,'teacher:start',auth);
+ let state=(await send(teacher,'teacher:join',auth)).state;
+ await send(teacher,'teacher:reset',{...auth,stage:state.stage,round:state.round});
+ state=(await send(teacher,'teacher:join',auth)).state;
+ assert.equal(state.joined,1);
+ assert.equal(state.classStarted,false);
+ assert.deepEqual(state.warmup,{started:true,stage:0});
+ assert.equal(state.stage,'gist');
 });
