@@ -4,7 +4,7 @@
   const themes={
     lobby:[9,0],lead:[0,9],vocabMatch:[1,3],vocabUse:[2,11],gist:[3,0],
     demo:[4,9],keys:[5,7],bridgeDemo:[6,0],combined:[7,6],peer:[8,9],
-    response:[9,0],exit:[10,8],homework:[11,9]
+    response:[9,0],exit:[10,8],thanks:[4,8],homework:[11,9]
   };
   const frame=document.createElement('div');frame.className='page-collage';
   frame.setAttribute('aria-hidden','true');frame.setAttribute('inert','');

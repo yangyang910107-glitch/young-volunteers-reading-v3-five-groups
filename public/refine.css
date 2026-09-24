@@ -191,3 +191,20 @@ body:not(.teacher) .heading h1{font-size:clamp(30px,3.1vw,44px);font-weight:900;
 .student-prompts .exit-answer-line{display:inline-block;width:155px;height:1em;margin:0 11px 0 0;border-bottom:2px solid #cf5542;vertical-align:baseline}
 .student-prompts .exit-question-text{display:inline}
 @media(max-width:700px){.student-prompts .exit-question-prompt{font-size:22px}.student-prompts .exit-answer-line{width:125px;margin-right:8px}}
+
+/* Shared final screen: one clear ending, with class controls only on the teacher view. */
+body[data-lesson-stage="thanks"] #lesson-panel{max-width:1050px;margin:28px auto 70px}
+body.teacher[data-lesson-stage="thanks"] .actions.teacher-toolbar{display:none!important}
+.thank-you-card{position:relative;overflow:hidden;padding:54px 48px 50px;border:1px solid #d9d2c1;border-top:6px solid #e6b33d;border-radius:24px;background:#fffdf7;box-shadow:9px 12px 0 #eadfc85e,0 18px 50px #0927490a;text-align:center}
+.thank-you-card::before,.thank-you-card::after{position:absolute;top:18px;color:#e6b33d;font-size:42px;content:"✦"}
+.thank-you-card::before{left:26px;transform:rotate(-12deg)}
+.thank-you-card::after{right:26px;transform:rotate(12deg)}
+.thank-you-mark{display:grid;place-items:center;width:72px;height:72px;margin:0 auto 24px;border-radius:50%;background:#e8f2ee;color:#277055;font-size:38px;font-weight:900}
+.thank-you-card h2{margin:0;color:#082b51;font-size:clamp(30px,4vw,44px)}
+.thank-you-message{margin:18px auto 0;color:#123f35;font-size:22px;font-weight:850;line-height:1.5}
+.thank-you-note{margin:12px 0 0;color:#727d77;font-size:14px}
+.thank-you-actions{display:flex;justify-content:center;gap:14px;margin-top:26px}
+.thank-you-actions button{min-width:250px;padding:17px 22px;border-radius:12px;font-size:14px;font-weight:900;letter-spacing:.3px}
+.thank-you-restart{border:0;background:#174d3e;color:#fff}
+.thank-you-clear{border:1px solid #d2cbb9;background:#fffdf8;color:#9c4335}
+@media(max-width:700px){body[data-lesson-stage="thanks"] #lesson-panel{margin-top:18px}.thank-you-card{padding:44px 20px 38px}.thank-you-card::before,.thank-you-card::after{font-size:28px}.thank-you-message{font-size:18px}.thank-you-actions{flex-direction:column}.thank-you-actions button{width:100%;min-width:0}}

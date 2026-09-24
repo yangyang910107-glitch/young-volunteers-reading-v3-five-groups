@@ -246,4 +246,4 @@
 LESSON.summary={title:'RECAPTURE',kind:'summary',note:'MULTIPLE MATCHING STRATEGY',questions:[],support:['1. FIND THE KEY IDEAS','2. MATCH EVERY PART','3. PROVE IT WITH EVIDENCE','4. CHECK WHO']};
 LESSON.exit.note='Choose a Key Idea, select exact Text Bridge evidence, then choose Who. Submit ONE complete ticket per group.';
 
-LESSON.awards={title:'MATCHING SUPERPOWERS',kind:'awards',note:'Choose your team’s award.',questions:[]};r.LESSON=LESSON;if(typeof module!=='undefined')module.exports=LESSON;})(typeof window==='undefined'?globalThis:window);
+LESSON.awards={title:'MATCHING SUPERPOWERS',kind:'awards',note:'Choose your team’s award.',questions:[]};LESSON.thanks={title:'THANK YOU',kind:'thanks',note:'The lesson is complete.',questions:[]};r.LESSON=LESSON;if(typeof module!=='undefined')module.exports=LESSON;})(typeof window==='undefined'?globalThis:window);

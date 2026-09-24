@@ -35,7 +35,10 @@ test('teacher can choose either final activity order after Recapture',async t=>{
   assert.equal(state.exitMode,'homework');
   const homeworkSnapshot=(await send('teacher:record',auth)).record;
   assert.deepEqual(homeworkSnapshot.exitReferences,[]);
+  await next();
+  assert.equal(state.stage,'thanks');
   await assert.rejects(next(),/final step/);
+  await previous();assert.equal(state.stage,'exit');
   await previous();assert.equal(state.stage,'awards');
   await previous();assert.equal(state.stage,'summary');
 
@@ -44,5 +47,7 @@ test('teacher can choose either final activity order after Recapture',async t=>{
   assert.equal(state.exitMode,'class');
   await next();
   assert.equal(state.stage,'awards');
+  await next();
+  assert.equal(state.stage,'thanks');
   await assert.rejects(next(),/final step/);
 });

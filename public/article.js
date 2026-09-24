@@ -208,4 +208,4 @@
   "wanted work + too young",
   "past problem → knows when others need help",
   "new chance → changes plan"
-];STAGES.push({id:"awards",title:"MATCHING SUPERPOWERS"});const SENTENCES=PROFILES.flatMap(p=>p.sentences.map((text,i)=>({id:p.id+(i+1),who:p.id,text})));const EVIDENCE_UNITS=SENTENCES.map(s=>({...s,parent:s.id}));if(typeof module!=='undefined')module.exports={STAGES,PROFILES,SENTENCES,EVIDENCE_UNITS,DEMO_SOURCE,MODEL_OPTIONS};else Object.assign(root,{STAGES,PROFILES,SENTENCES,EVIDENCE_UNITS,DEMO_SOURCE,MODEL_OPTIONS});})(typeof window!=='undefined'?window:globalThis);
+];STAGES.push({id:"awards",title:"MATCHING SUPERPOWERS"},{id:"thanks",title:"THANK YOU"});const SENTENCES=PROFILES.flatMap(p=>p.sentences.map((text,i)=>({id:p.id+(i+1),who:p.id,text})));const EVIDENCE_UNITS=SENTENCES.map(s=>({...s,parent:s.id}));if(typeof module!=='undefined')module.exports={STAGES,PROFILES,SENTENCES,EVIDENCE_UNITS,DEMO_SOURCE,MODEL_OPTIONS};else Object.assign(root,{STAGES,PROFILES,SENTENCES,EVIDENCE_UNITS,DEMO_SOURCE,MODEL_OPTIONS});})(typeof window!=='undefined'?window:globalThis);
