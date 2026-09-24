@@ -1,4 +1,7 @@
-let session=readStore('readingV3TeacherSession'),state=null,busy=false,profile='A';$('code').value=session?.code||'VOL'+Math.floor(100+Math.random()*900);
+const FIXED_ROOM_CODE='VOL5G';
+let session=readStore('readingV3TeacherSession'),state=null,busy=false,profile='A';
+if(session?.code!==FIXED_ROOM_CODE){session=null;sessionStorage.removeItem('readingV3TeacherSession');}
+$('code').value=FIXED_ROOM_CODE;$('code').readOnly=true;
 async function join(code,token){try{const r=await request('teacher:join',{code,token,expected:5});if(r.state.version!=='volunteers-reading-v3-five-groups'||!r.state.groups||r.state.expectedStudents===undefined)throw Error('网页与服务器版本尚未同步。请确认根目录和 public 两个更新包均已提交，等待 Render 部署成功后重新打开。');session={code:r.state.code,token:r.token,expected:r.state.expectedStudents};sessionStorage.setItem('readingV3TeacherSession',JSON.stringify(session));$('setup').hidden=true;$('game').hidden=false;render(r.state);error();if(r.created){const entry=new URL('/join.html',location.origin);entry.searchParams.set('room',r.state.code);location.assign(entry.href);}}catch(e){error(e.message);}}
 $('room-form').onsubmit=e=>{e.preventDefault();const code=$('code').value.trim().toUpperCase();join(code,session?.code===code?session.token:undefined);};socket.on('connect',()=>{if(session)join(session.code,session.token);});socket.on('room:state',render);
 async function action(event,data={}){if(busy||!state)return;const stage=state.stage,round=state.round;busy=true;render(state);try{await request(event,{...session,stage,round,...data});error();}catch(e){error(e.message);}finally{busy=false;render(state);}}
@@ -19,5 +22,3 @@ function advanceGuide(){guideIndex++;if(guideIndex>=(guideMode==='questions'?6:P
 $('export-class').onclick=()=>downloadRecord($('export-class'),'teacher:record',session,'Young-Volunteers-'+session.code+'-class.pdf');
 
 $('copy-guest').onclick=async()=>{try{await navigator.clipboard.writeText($('observer-link').href);$('copy-guest').textContent='GUEST LINK COPIED ✓';}catch{error('Open the student demo and copy its browser address.');}};
-
-
