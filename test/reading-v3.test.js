@@ -79,3 +79,17 @@ test('fixed room restores a returning group and can be reclaimed after the teach
  assert.equal(reclaimed.state.joined,1);
  await assert.rejects(send(await connect(),'teacher:join',{code:'VOL5G',expected:5}),/in use/i);
 });
+
+test('an empty fixed room can be reopened immediately without waiting for the old teacher socket',async t=>{
+ const app=createApp(),clients=[];
+ await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
+ t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(resolve=>app.io.close(resolve));});
+ const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(resolve=>c.once('connect',resolve));return c;};
+ const send=(c,event,payload={})=>new Promise((resolve,reject)=>c.timeout(3000).emit(event,payload,(err,result)=>err?reject(err):result.ok?resolve(result):reject(Error(result.error))));
+ const first=await send(await connect(),'teacher:join',{code:'VOL5G',expected:5});
+ const reopened=await send(await connect(),'teacher:join',{code:'VOL5G',expected:5});
+ assert.equal(reopened.created,true);
+ assert.notEqual(reopened.token,first.token);
+ assert.equal(reopened.state.joined,0);
+ assert.equal(reopened.state.stage,'gist');
+});
