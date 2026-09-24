@@ -4,6 +4,7 @@ function readLocalResume(key){try{return JSON.parse(localStorage.getItem(key));}
 function writeLocalResume(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{}}
 function rememberedEntry(code,observer){return readLocalResume('lessonEntry:'+String(code||'').toUpperCase()+':'+(observer?'guest':'student'));}
 function rememberEntry(value){writeLocalResume('lessonEntry:'+value.code+':'+(value.observer?'guest':'student'),{name:value.name,group:value.group});}
+function forgetEntry(code,observer){try{localStorage.removeItem('lessonEntry:'+String(code||'').toUpperCase()+':'+(observer?'guest':'student'));}catch{}}
 function noteRecoveryKey(){return 'lessonNotes:'+state.roomId+':'+state.round+':'+(session.observer?'guest:':'student:')+resumeNameKey(session.name);}
 function cachePrivateNotes(value){writeLocalResume(noteRecoveryKey(),{value,base:personal?.notesRevision||0,unsaved:true});}
 function acknowledgePrivateNotes(value,p){const cached=readLocalResume(noteRecoveryKey());if(cached?.value===value)writeLocalResume(noteRecoveryKey(),{value,base:p.notesRevision||0,unsaved:false});else if(cached?.unsaved)writeLocalResume(noteRecoveryKey(),{...cached,base:p.notesRevision||0});}
