@@ -26,6 +26,22 @@ function feedbackKey(){return 'groupCheck:'+state.roomId+':'+state.round+':'+ses
 function accept(p,force=false){if(!state||p.stage!==state.stage||p.round!==state.round)return;const changed=force||!personal||personal.stage!==p.stage||personal.round!==p.round||personal.group!==p.group;if(session?.observer)session.group=p.group;const activeLesson=document.querySelector('#lesson-panel textarea');if(activeLesson&&document.activeElement===activeLesson&&!changed&&p.stage==='response')p.lessonDraft=activeLesson.value;personal=restorePrivateNotes(p);p=personal;if(changed){exitIndex=0;keyIndex=0;bridgeIndex=0;exitDrafts=p.exitAnswers||readStore(exitKey(),[{key:null,who:null,evidence:[]},{key:null,who:null,evidence:[]}]);check=p.sent||readStore(feedbackKey(),{status:'',note:''});}if(p.sent)check=p.sent;if(p.exitAnswers)exitDrafts=p.exitAnswers;render();}
 async function join(){if(joining)return;const currentCode=$('code').value.trim().toUpperCase(),group=Number($('group').value),selected=groupAvailability.find(g=>g.id===group),mine=session?.code===currentCode&&Number(session.group)===group;if(!$('observer').checked&&selected?.inUse&&!mine){error('Group '+group+' is already taken. Please choose another OPEN group.');paintGroupAvailability();return;}joining=true;paintGroupAvailability();try{const r=await request($('observer').checked?'observer:join':'student:join',{code:$('code').value,name:$('name').value,group,clientId:$('observer').checked?guestClientId:clientId,practice:$('observer').checked});if(r.state.version!=='volunteers-reading-v3-five-groups')throw Error('网页更新尚未部署完成，请稍后重新打开。');session={code:r.state.code,name:r.name,group:r.group,observer:!!r.observer,practice:!!r.practice};sessionStorage.setItem('readingV3StudentSession',JSON.stringify(session));rememberEntry(session);state=r.state;$('join').hidden=true;$('game').hidden=false;accept(r.personal,true);error();}catch(e){error(e.message);}finally{joining=false;paintGroupAvailability();}}
 $('join-form').onsubmit=e=>{e.preventDefault();join();};socket.on('connect',()=>{refreshGroupAvailability();if(session&&session.code===$('code').value.trim().toUpperCase()&&!!session.observer===$('observer').checked)join();});socket.on('room:state',s=>{if(joining||!session||s.code!==session.code)return;const changed=!state||state.stage!==s.stage||state.round!==s.round;state=s;if(changed){personal=null;busy=false;}render();});socket.on('group:personal',p=>{if(!joining)accept(p);});
+let wakeResumeTimer=null;
+function resumeAfterWake(){
+ if(document.visibilityState==='hidden')return;
+ clearTimeout(wakeResumeTimer);
+ wakeResumeTimer=setTimeout(async()=>{
+  try{
+   if(!socket.connected)socket.connect();
+   await waitForConnection(8000);
+   const sameSession=session&&session.code===$('code').value.trim().toUpperCase()&&!!session.observer===$('observer').checked;
+   if(sameSession&&!joining)join();else refreshGroupAvailability();
+  }catch{error('Reconnecting… Please keep this page open.');}
+ },200);
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')resumeAfterWake();});
+window.addEventListener('pageshow',resumeAfterWake);
+window.addEventListener('online',resumeAfterWake);
 async function action(event,data={}){if(busy||state?.stage==='exit')return;busy=true;render();try{const r=await request(event,{stage:state.stage,round:state.round,...data});if(r.personal)accept(r.personal);error();}catch(e){error(e.message);}finally{busy=false;render();}}
 function change(field,value,selected=true){if(guestReadOnly())return;if(state.stage==='exit'){const a=exitDrafts[exitIndex];if(field==='key')a.key=value;else if(field==='who')a.who=value;else{const i=a.evidence.indexOf(value);if(!selected){if(i>=0)a.evidence.splice(i,1);}else if(i<0){if(a.evidence.length>=20){error('Choose at most 20 text fragments.');return;}a.evidence.push(value);}}saveExit();render();return;}action('group:draft',{field,value,selected,...(state.stage==='keys'?{q:keyIndex}:state.stage==='combined'?{q:personal.qs[bridgeIndex]}:{})});}
 function complete(a){return a&&a.who&&a.evidence.length>=1;}
