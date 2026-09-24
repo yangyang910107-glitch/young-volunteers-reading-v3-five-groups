@@ -97,6 +97,12 @@ test('an empty fixed room can be reopened immediately without waiting for the ol
  assert.equal(firstTeacher.connected,false);
  await assert.rejects(send(await connect(),'teacher:join',{code:'VOL5G',token:first.token,expected:5}),/latest teacher tab/i);
  assert.equal((await send(latestTeacher,'teacher:join',{code:'VOL5G',token:reopened.token,expected:5})).token,reopened.token);
+ latestTeacher.disconnect();
+ await new Promise(resolve=>setTimeout(resolve,30));
+ const staleTeacher=await connect(),recovered=await send(staleTeacher,'teacher:join',{code:'VOL5G',token:first.token,expected:5});
+ assert.equal(recovered.created,true);
+ assert.equal(recovered.state.joined,0);
+ assert.notEqual(recovered.token,first.token);
 });
 
 test('a rescanned student restores one record while wrong names and groups stay blocked',async t=>{
