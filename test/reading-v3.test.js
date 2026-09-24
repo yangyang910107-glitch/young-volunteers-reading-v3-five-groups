@@ -58,51 +58,19 @@ test('five-group lesson keeps all six bridge questions and uses a five-group pee
  assert.deepEqual(record.groups[4].initialCorrect,[true,true]);
 });
 
-test('fixed room restores a returning group and can be reclaimed after the teacher closes it',async t=>{
+test('separate room codes keep classes and group places isolated',async t=>{
  const app=createApp(),clients=[];
  await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
  t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(resolve=>app.io.close(resolve));});
  const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(resolve=>c.once('connect',resolve));return c;};
  const send=(c,event,payload={})=>new Promise((resolve,reject)=>c.timeout(3000).emit(event,payload,(err,result)=>err?reject(err):result.ok?resolve(result):reject(Error(result.error))));
- const teacher=await connect(),opened=await send(teacher,'teacher:join',{code:'VOL5G',expected:5});
- const firstStudent=await connect();
- await send(firstStudent,'student:join',{code:'VOL5G',group:2,name:'Recovery Team',clientId:'original-recovery-client'});
- firstStudent.disconnect();
- await new Promise(resolve=>setTimeout(resolve,30));
- const returningStudent=await connect(),restored=await send(returningStudent,'student:join',{code:'VOL5G',group:2,name:'Recovery Team',clientId:'new-recovery-client'});
- assert.equal(restored.resumed,true);
- assert.equal(restored.group,2);
- teacher.disconnect();
- await new Promise(resolve=>setTimeout(resolve,30));
- const replacementTeacher=await connect(),reclaimed=await send(replacementTeacher,'teacher:join',{code:'VOL5G',expected:5,takeover:true});
- assert.notEqual(reclaimed.token,opened.token);
- assert.equal(reclaimed.state.joined,1);
- await assert.rejects(send(await connect(),'teacher:join',{code:'VOL5G',expected:5,takeover:true}),/in use/i);
-});
-
-test('an empty fixed room can be reopened immediately without waiting for the old teacher socket',async t=>{
- const app=createApp(),clients=[];
- await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
- t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(resolve=>app.io.close(resolve));});
- const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(resolve=>c.once('connect',resolve));return c;};
- const send=(c,event,payload={})=>new Promise((resolve,reject)=>c.timeout(3000).emit(event,payload,(err,result)=>err?reject(err):result.ok?resolve(result):reject(Error(result.error))));
- const firstTeacher=await connect(),first=await send(firstTeacher,'teacher:join',{code:'VOL5G',expected:5});
- const oldTeacherClosed=new Promise(resolve=>firstTeacher.once('disconnect',resolve));
- const latestTeacher=await connect(),reopened=await send(latestTeacher,'teacher:join',{code:'VOL5G',expected:5,takeover:true});
- await oldTeacherClosed;
- assert.equal(reopened.created,true);
- assert.notEqual(reopened.token,first.token);
- assert.equal(reopened.state.joined,0);
- assert.equal(reopened.state.stage,'gist');
- assert.equal(firstTeacher.connected,false);
- await assert.rejects(send(await connect(),'teacher:join',{code:'VOL5G',token:first.token,expected:5}),/latest teacher tab/i);
- assert.equal((await send(latestTeacher,'teacher:join',{code:'VOL5G',token:reopened.token,expected:5})).token,reopened.token);
- latestTeacher.disconnect();
- await new Promise(resolve=>setTimeout(resolve,30));
- const staleTeacher=await connect(),recovered=await send(staleTeacher,'teacher:join',{code:'VOL5G',token:first.token,expected:5});
- assert.equal(recovered.created,true);
- assert.equal(recovered.state.joined,0);
- assert.notEqual(recovered.token,first.token);
+ const firstTeacher=await connect(),first=await send(firstTeacher,'teacher:join',{code:'VOL321',expected:5});
+ const secondTeacher=await connect(),second=await send(secondTeacher,'teacher:join',{code:'VOL654',expected:5});
+ await send(await connect(),'student:join',{code:'VOL321',group:2,name:'First Class',clientId:'first-class-tablet'});
+ assert.equal((await send(await connect(),'room:availability',{code:'VOL321'})).groups[1].inUse,true);
+ assert.equal((await send(await connect(),'room:availability',{code:'VOL654'})).groups[1].inUse,false);
+ assert.notEqual(first.token,second.token);
+ await assert.rejects(send(await connect(),'teacher:join',{code:'VOL321',expected:5}),/in use/i);
 });
 
 test('a rescanned student restores one record while wrong names and groups stay blocked',async t=>{
