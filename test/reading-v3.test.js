@@ -155,3 +155,21 @@ test('restart returns to Lead-in while keeping the current groups',async t=>{
  assert.deepEqual(state.warmup,{started:true,stage:0});
  assert.equal(state.stage,'gist');
 });
+
+test('tester mode can use a group view without occupying that group',async t=>{
+ const app=createApp(),clients=[];
+ await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
+ t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(resolve=>app.io.close(resolve));});
+ const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(resolve=>c.once('connect',resolve));return c;};
+ const send=(c,event,payload={})=>new Promise((resolve,reject)=>c.timeout(3000).emit(event,payload,(err,result)=>err?reject(err):result.ok?resolve(result):reject(Error(result.error))));
+ const teacher=await connect();
+ await send(teacher,'teacher:join',{code:'TESTMODE',expected:5});
+ const tester=await connect();
+ await send(tester,'observer:join',{code:'TESTMODE',group:2,name:'Tester',clientId:'isolated-tester-mode',practice:true});
+ const availability=await send(tester,'room:availability',{code:'TESTMODE'});
+ assert.equal(availability.groups[1].inUse,false);
+ const official=await send(await connect(),'student:join',{code:'TESTMODE',group:2,name:'Official Group',clientId:'official-after-tester'});
+ assert.equal(official.group,2);
+ assert.equal(official.state.joined,1);
+ assert.equal(official.state.observers,1);
+});
